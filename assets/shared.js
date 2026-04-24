@@ -211,6 +211,53 @@
     return 62000 + counter;
   }
 
+  function fitTopologyStage(stage) {
+    const scene = stage.querySelector(".topology-scene");
+    const baseWidth = Number(stage.dataset.sceneWidth);
+    const baseHeight = Number(stage.dataset.sceneHeight);
+
+    if (!scene || !baseWidth || !baseHeight) {
+      return;
+    }
+
+    const styles = window.getComputedStyle(stage);
+    const horizontalPadding =
+      Number.parseFloat(styles.paddingLeft) + Number.parseFloat(styles.paddingRight);
+    const verticalPadding =
+      Number.parseFloat(styles.paddingTop) + Number.parseFloat(styles.paddingBottom);
+    const hostWidth = stage.parentElement?.clientWidth || stage.clientWidth;
+    const availableWidth = Math.max(hostWidth - horizontalPadding, 240);
+    const scale = Math.min(1, availableWidth / baseWidth);
+
+    scene.style.width = `${baseWidth}px`;
+    scene.style.height = `${baseHeight}px`;
+    scene.style.transform = `scale(${scale})`;
+    stage.style.height = `${baseHeight * scale + verticalPadding}px`;
+  }
+
+  function initTopologyScaling() {
+    const stages = Array.from(document.querySelectorAll(".topology-stage[data-scene-width]"));
+
+    stages.forEach((stage) => {
+      fitTopologyStage(stage);
+
+      if ("ResizeObserver" in window) {
+        const observer = new ResizeObserver(() => {
+          fitTopologyStage(stage);
+        });
+        observer.observe(stage);
+      } else {
+        window.addEventListener("resize", () => fitTopologyStage(stage));
+      }
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initTopologyScaling, { once: true });
+  } else {
+    initTopologyScaling();
+  }
+
   window.NetworkSim = {
     BROADCAST_MAC,
     UNKNOWN_MAC,
@@ -226,6 +273,7 @@
     setText,
     updateProtocolPill,
     makeNatPort,
+    fitTopologyStage,
     wait,
   };
 })();

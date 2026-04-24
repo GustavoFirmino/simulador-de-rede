@@ -325,6 +325,19 @@ button {
   overflow: hidden;
 }
 
+.topology-stage--scaled {
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(17, 33, 48, 0.18) transparent;
+}
+
+.topology-scene {
+  position: relative;
+  margin: 0 auto;
+  transform-origin: top left;
+}
+
 .topology-stage.stage-dark {
   background:
     radial-gradient(circle at top, rgba(15, 157, 139, 0.18), transparent 42%),
@@ -870,6 +883,10 @@ button {
 
   .topology-stage {
     min-height: 560px;
+  }
+
+  .topology-stage--scaled {
+    min-height: 0;
   }
 
   .device {

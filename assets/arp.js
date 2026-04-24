@@ -37,6 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nextStep: document.getElementById("next-step"),
     autoRun: document.getElementById("auto-run"),
     reset: document.getElementById("reset-arp"),
+    focusStage: document.getElementById("focus-arp-stage"),
     inspector: document.getElementById("arp-inspector"),
     timeline: document.getElementById("arp-timeline"),
     progress: document.getElementById("arp-progress"),
@@ -815,6 +816,10 @@ document.addEventListener("DOMContentLoaded", () => {
   elements.reset.addEventListener("click", () => {
     state = createState();
     renderStatus();
+  });
+
+  elements.focusStage.addEventListener("click", () => {
+    elements.stage.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 
   state = createState();

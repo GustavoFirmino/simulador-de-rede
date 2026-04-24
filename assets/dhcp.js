@@ -54,6 +54,7 @@ document.addEventListener("DOMContentLoaded", () => {
     nextStep: document.getElementById("dhcp-next-step"),
     autoRun: document.getElementById("dhcp-auto-run"),
     reset: document.getElementById("reset-dhcp"),
+    focusStage: document.getElementById("focus-dhcp-stage"),
     statusText: document.getElementById("dhcp-status-text"),
     statusPill: document.getElementById("dhcp-status-pill"),
     stepLabel: document.getElementById("dhcp-step-label"),
@@ -1081,6 +1082,10 @@ document.addEventListener("DOMContentLoaded", () => {
   elements.reset.addEventListener("click", () => {
     state = createState();
     renderStatus();
+  });
+
+  elements.focusStage.addEventListener("click", () => {
+    elements.stage.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 
   state = createState();

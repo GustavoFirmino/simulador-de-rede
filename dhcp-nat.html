@@ -78,91 +78,97 @@
               </div>
             </div>
 
-            <div id="dhcp-stage" class="topology-stage stage-dark">
-              <svg viewBox="0 0 1180 640" preserveAspectRatio="none" aria-hidden="true">
-                <path class="link-line" d="M 170 120 C 300 170, 380 220, 530 270" />
-                <path class="link-line" d="M 170 500 C 300 430, 380 380, 530 330" />
-                <path class="link-line" d="M 350 310 C 420 310, 460 310, 530 310" />
-                <path class="link-line" d="M 710 310 C 780 310, 820 310, 890 310" />
-                <path class="link-line" d="M 980 310 C 1030 310, 1060 310, 1110 310" />
-              </svg>
+            <div
+              id="dhcp-stage"
+              class="topology-stage topology-stage--scaled stage-dark"
+              data-scene-width="1180"
+              data-scene-height="640"
+            >
+              <div class="topology-scene">
+                <svg viewBox="0 0 1180 640" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="link-line" d="M 170 120 C 300 170, 380 220, 530 270" />
+                  <path class="link-line" d="M 170 500 C 300 430, 380 380, 530 330" />
+                  <path class="link-line" d="M 350 310 C 420 310, 460 310, 530 310" />
+                  <path class="link-line" d="M 710 310 C 780 310, 820 310, 890 310" />
+                  <path class="link-line" d="M 980 310 C 1030 310, 1060 310, 1110 310" />
+                </svg>
 
-              <article id="node-lan-a" class="device" style="left: 30px; top: 54px;">
-                <div class="device-icon">🖥</div>
-                <div class="device-title">
-                  <strong>PC A</strong>
-                  <span>Cliente LAN</span>
-                </div>
-                <div id="meta-lan-a" class="device-meta"></div>
-              </article>
+                <article id="node-lan-a" class="device" style="left: 30px; top: 54px;">
+                  <div class="device-icon">🖥</div>
+                  <div class="device-title">
+                    <strong>PC A</strong>
+                    <span>Cliente LAN</span>
+                  </div>
+                  <div id="meta-lan-a" class="device-meta"></div>
+                </article>
 
-              <article id="node-lan-b" class="device" style="left: 30px; top: 260px;">
-                <div class="device-icon">🖥</div>
-                <div class="device-title">
-                  <strong>PC B</strong>
-                  <span>Cliente LAN</span>
-                </div>
-                <div id="meta-lan-b" class="device-meta"></div>
-              </article>
+                <article id="node-lan-b" class="device" style="left: 30px; top: 260px;">
+                  <div class="device-icon">🖥</div>
+                  <div class="device-title">
+                    <strong>PC B</strong>
+                    <span>Cliente LAN</span>
+                  </div>
+                  <div id="meta-lan-b" class="device-meta"></div>
+                </article>
 
-              <article id="node-lan-c" class="device" style="left: 30px; top: 468px;">
-                <div class="device-icon">🖥</div>
-                <div class="device-title">
-                  <strong>PC C</strong>
-                  <span>Cliente LAN</span>
-                </div>
-                <div id="meta-lan-c" class="device-meta"></div>
-              </article>
+                <article id="node-lan-c" class="device" style="left: 30px; top: 468px;">
+                  <div class="device-icon">🖥</div>
+                  <div class="device-title">
+                    <strong>PC C</strong>
+                    <span>Cliente LAN</span>
+                  </div>
+                  <div id="meta-lan-c" class="device-meta"></div>
+                </article>
 
-              <article id="node-lan-switch" class="device" style="left: 470px; top: 240px;">
-                <div class="device-icon">⇄</div>
-                <div class="device-title">
-                  <strong>Switch SW2</strong>
-                  <span>Distribui broadcasts</span>
-                </div>
-                <div class="device-meta">
-                  <div>Portas LAN: Fa0/1 até Fa0/4</div>
-                  <div>Aprende MACs da borda local</div>
-                </div>
-              </article>
+                <article id="node-lan-switch" class="device" style="left: 470px; top: 240px;">
+                  <div class="device-icon">⇄</div>
+                  <div class="device-title">
+                    <strong>Switch SW2</strong>
+                    <span>Distribui broadcasts</span>
+                  </div>
+                  <div class="device-meta">
+                    <div>Portas LAN: Fa0/1 até Fa0/4</div>
+                    <div>Aprende MACs da borda local</div>
+                  </div>
+                </article>
 
-              <article id="node-router" class="device" style="left: 810px; top: 240px;">
-                <div class="device-icon">⎈</div>
-                <div class="device-title">
-                  <strong>Roteador R1</strong>
-                  <span>DHCP + Gateway + NAT</span>
-                </div>
-                <div class="device-meta">
-                  <div>LAN: 10.0.50.1/24</div>
-                  <div>WAN: 203.0.113.10</div>
-                  <div>MAC LAN: 00:50:AA:00:00:01</div>
-                </div>
-              </article>
+                <article id="node-router" class="device" style="left: 810px; top: 240px;">
+                  <div class="device-icon">⎈</div>
+                  <div class="device-title">
+                    <strong>Roteador R1</strong>
+                    <span>DHCP + Gateway + NAT</span>
+                  </div>
+                  <div class="device-meta">
+                    <div>LAN: 10.0.50.1/24</div>
+                    <div>WAN: 203.0.113.10</div>
+                    <div>MAC LAN: 00:50:AA:00:00:01</div>
+                  </div>
+                </article>
 
-              <article id="node-cloud" class="device" style="left: 980px; top: 140px;">
-                <div class="device-icon">☁</div>
-                <div class="device-title">
-                  <strong>Internet</strong>
-                  <span>Nuvem pública</span>
-                </div>
-                <div class="device-meta">
-                  <div>Trânsito WAN</div>
-                  <div>Encaminha até o servidor remoto</div>
-                </div>
-              </article>
+                <article id="node-cloud" class="device" style="left: 980px; top: 140px;">
+                  <div class="device-icon">☁</div>
+                  <div class="device-title">
+                    <strong>Internet</strong>
+                    <span>Nuvem pública</span>
+                  </div>
+                  <div class="device-meta">
+                    <div>Trânsito WAN</div>
+                    <div>Encaminha até o servidor remoto</div>
+                  </div>
+                </article>
 
-              <article id="node-server" class="device" style="left: 980px; top: 370px;">
-                <div class="device-icon">🌐</div>
-                <div class="device-title">
-                  <strong>uol.com.br</strong>
-                  <span>Servidor externo</span>
-                </div>
-                <div class="device-meta">
-                  <div>IP: 198.51.100.20</div>
-                  <div>Porta web: 443</div>
-                </div>
-              </article>
-
+                <article id="node-server" class="device" style="left: 980px; top: 370px;">
+                  <div class="device-icon">🌐</div>
+                  <div class="device-title">
+                    <strong>uol.com.br</strong>
+                    <span>Servidor externo</span>
+                  </div>
+                  <div class="device-meta">
+                    <div>IP: 198.51.100.20</div>
+                    <div>Porta web: 443</div>
+                  </div>
+                </article>
+              </div>
               <div id="packet-badge-dhcp" class="packet-badge" aria-live="polite"></div>
             </div>
           </article>
@@ -234,6 +240,7 @@
               </div>
               <div class="control-row">
                 <button id="reset-dhcp" class="button button-ghost" type="button">Resetar laboratório</button>
+                <button id="focus-dhcp-stage" class="button button-ghost" type="button">Ver topologia inteira</button>
               </div>
             </div>
           </article>

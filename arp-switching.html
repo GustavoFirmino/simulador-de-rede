@@ -78,64 +78,70 @@
               </div>
             </div>
 
-            <div id="arp-stage" class="topology-stage">
-              <svg viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
-                <path class="link-line" d="M 200 120 C 320 170, 380 220, 500 270" />
-                <path class="link-line" d="M 200 470 C 320 420, 380 370, 500 320" />
-                <path class="link-line" d="M 800 300 C 700 300, 620 300, 520 300" />
-              </svg>
+            <div
+              id="arp-stage"
+              class="topology-stage topology-stage--scaled"
+              data-scene-width="1000"
+              data-scene-height="620"
+            >
+              <div class="topology-scene">
+                <svg viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
+                  <path class="link-line" d="M 200 120 C 320 170, 380 220, 500 270" />
+                  <path class="link-line" d="M 200 470 C 320 420, 380 370, 500 320" />
+                  <path class="link-line" d="M 800 300 C 700 300, 620 300, 520 300" />
+                </svg>
 
-              <article id="node-pc-a" class="device" style="left: 40px; top: 54px;">
-                <div class="device-icon">🖥</div>
-                <div class="device-title">
-                  <strong>PC A</strong>
-                  <span>Origem</span>
-                </div>
-                <div class="device-meta">
-                  <div>IP: 192.168.10.10/24</div>
-                  <div>MAC: 00:1A:2B:3C:4D:0A</div>
-                  <div>Porta: Fa0/1</div>
-                </div>
-              </article>
+                <article id="node-pc-a" class="device" style="left: 40px; top: 54px;">
+                  <div class="device-icon">🖥</div>
+                  <div class="device-title">
+                    <strong>PC A</strong>
+                    <span>Origem</span>
+                  </div>
+                  <div class="device-meta">
+                    <div>IP: 192.168.10.10/24</div>
+                    <div>MAC: 00:1A:2B:3C:4D:0A</div>
+                    <div>Porta: Fa0/1</div>
+                  </div>
+                </article>
 
-              <article id="node-pc-b" class="device" style="left: 40px; top: 410px;">
-                <div class="device-icon">🖥</div>
-                <div class="device-title">
-                  <strong>PC B</strong>
-                  <span>Escuta o broadcast</span>
-                </div>
-                <div class="device-meta">
-                  <div>IP: 192.168.10.20/24</div>
-                  <div>MAC: 00:1A:2B:3C:4D:14</div>
-                  <div>Porta: Fa0/2</div>
-                </div>
-              </article>
+                <article id="node-pc-b" class="device" style="left: 40px; top: 410px;">
+                  <div class="device-icon">🖥</div>
+                  <div class="device-title">
+                    <strong>PC B</strong>
+                    <span>Escuta o broadcast</span>
+                  </div>
+                  <div class="device-meta">
+                    <div>IP: 192.168.10.20/24</div>
+                    <div>MAC: 00:1A:2B:3C:4D:14</div>
+                    <div>Porta: Fa0/2</div>
+                  </div>
+                </article>
 
-              <article id="node-switch" class="device" style="left: 410px; top: 230px;">
-                <div class="device-icon">⇄</div>
-                <div class="device-title">
-                  <strong>Switch SW1</strong>
-                  <span>Tabela MAC inicia vazia</span>
-                </div>
-                <div class="device-meta">
-                  <div>Portas ativas: Fa0/1, Fa0/2, Fa0/3</div>
-                  <div>Aprende origem e decide flood/unicast</div>
-                </div>
-              </article>
+                <article id="node-switch" class="device" style="left: 410px; top: 230px;">
+                  <div class="device-icon">⇄</div>
+                  <div class="device-title">
+                    <strong>Switch SW1</strong>
+                    <span>Tabela MAC inicia vazia</span>
+                  </div>
+                  <div class="device-meta">
+                    <div>Portas ativas: Fa0/1, Fa0/2, Fa0/3</div>
+                    <div>Aprende origem e decide flood/unicast</div>
+                  </div>
+                </article>
 
-              <article id="node-pc-c" class="device" style="left: 770px; top: 230px;">
-                <div class="device-icon">🖥</div>
-                <div class="device-title">
-                  <strong>PC C</strong>
-                  <span>Destino</span>
-                </div>
-                <div class="device-meta">
-                  <div>IP: 192.168.10.30/24</div>
-                  <div>MAC: 00:1A:2B:3C:4D:1E</div>
-                  <div>Porta: Fa0/3</div>
-                </div>
-              </article>
-
+                <article id="node-pc-c" class="device" style="left: 770px; top: 230px;">
+                  <div class="device-icon">🖥</div>
+                  <div class="device-title">
+                    <strong>PC C</strong>
+                    <span>Destino</span>
+                  </div>
+                  <div class="device-meta">
+                    <div>IP: 192.168.10.30/24</div>
+                    <div>MAC: 00:1A:2B:3C:4D:1E</div>
+                    <div>Porta: Fa0/3</div>
+                  </div>
+                </article>
+              </div>
               <div id="packet-badge-arp" class="packet-badge" aria-live="polite"></div>
             </div>
           </article>
@@ -207,6 +213,7 @@
               </div>
               <div class="control-row">
                 <button id="reset-arp" class="button button-ghost" type="button">Resetar topologia</button>
+                <button id="focus-arp-stage" class="button button-ghost" type="button">Ver topologia inteira</button>
               </div>
             </div>
           </article>
