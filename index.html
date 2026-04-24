@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simulador de Rede | ARP, DHCP e NAT</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="./index.html">
+          <span class="brand-mark">◎</span>
+          <span>Simulador de Rede</span>
+        </a>
+        <nav class="nav-links" aria-label="Navegação principal">
+          <a class="nav-link" href="./arp-switching.html">Missão 1</a>
+          <a class="nav-link" href="./dhcp-nat.html">Missão 2</a>
+          <a class="nav-link" href="./docs/relatorio-entrega.html">Relatório</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <span class="eyebrow">Redes de Computadores • Entrega Interativa</span>
+        <div class="hero-grid">
+          <div>
+            <h1>Do broadcast ARP ao NAT com inspeção visual pacote a pacote.</h1>
+            <p>
+              Projeto web com dois simuladores modernos em HTML, CSS e JavaScript
+              puro. Cada missão mostra o passo a passo real da pilha TCP/IP, com
+              tabelas vivas, inspeção de cabeçalhos e tráfego animado no cenário.
+            </p>
+            <div class="hero-actions">
+              <a class="button button-primary" href="./arp-switching.html">Abrir simulador ARP</a>
+              <a class="button button-secondary" href="./dhcp-nat.html">Abrir simulador DHCP/NAT</a>
+              <a class="button button-ghost" href="./docs/relatorio-entrega.html">Ver relatório da entrega</a>
+            </div>
+          </div>
+          <div class="hero-metrics">
+            <article class="metric">
+              <strong>2</strong>
+              <span>missões completas, separadas e prontas para abrir no navegador</span>
+            </article>
+            <article class="metric">
+              <strong>Passo a passo</strong>
+              <span>nenhum protocolo é pulado; cada botão avança uma etapa lógica</span>
+            </article>
+            <article class="metric">
+              <strong>Wireshark visual</strong>
+              <span>campos Ethernet, ARP, IP, UDP, TCP e NAT expostos em tela</span>
+            </article>
+            <article class="metric">
+              <strong>Design atual</strong>
+              <span>layout responsivo, cards translúcidos e topologias animadas</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="landing-grid" aria-label="Resumo das entregas">
+        <article class="feature-card">
+          <div class="feature-icon">⇄</div>
+          <h3>Missão 1: Switching e ARP</h3>
+          <p>
+            Três PCs conectados a um switch. O fluxo do ping A → C só continua
+            depois da descoberta ARP e da aprendizagem correta da tabela MAC.
+          </p>
+          <a class="report-link" href="./arp-switching.html">Explorar simulação</a>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">☍</div>
+          <h3>Missão 2: DHCP, Roteamento e NAT</h3>
+          <p>
+            PCs iniciam com `0.0.0.0`, recebem IP por DHCP DORA e depois acessam
+            um servidor externo com tradução de IP e porta no roteador.
+          </p>
+          <a class="report-link" href="./dhcp-nat.html">Abrir laboratório</a>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">✦</div>
+          <h3>Relatório da entrega</h3>
+          <p>
+            Documento com prompts utilizados, decisões de implementação,
+            correção conceitual e instruções para apresentação em sala.
+          </p>
+          <a class="report-link" href="./docs/relatorio-entrega.html">Ler documentação</a>
+        </article>
+      </section>
+
+      <section class="main-grid">
+        <div class="stack">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>O que está resolvido aqui</h2>
+                <p>
+                  Os dois simuladores foram modelados para começar do estado
+                  zero, preencher tabelas em tempo real e deixar explícitas as
+                  decisões de camada 2, 3 e 4.
+                </p>
+              </div>
+            </div>
+            <div class="mini-grid">
+              <div class="info-card">
+                <h4>ARP sem atalhos</h4>
+                <p>
+                  O primeiro ping fica em espera até o host descobrir o MAC
+                  correto do destino e só então montar o quadro Ethernet.
+                </p>
+              </div>
+              <div class="info-card">
+                <h4>Switch aprendendo portas</h4>
+                <p>
+                  A tabela MAC começa vazia e evolui conforme os quadros entram
+                  no equipamento, reforçando flood, unicast e aprendizagem.
+                </p>
+              </div>
+              <div class="info-card">
+                <h4>DORA visível</h4>
+                <p>
+                  Discover, Offer, Request e ACK aparecem com IPs, portas UDP e
+                  atualização da tabela de concessões na tela.
+                </p>
+              </div>
+              <div class="info-card">
+                <h4>NAT/PAT explicado</h4>
+                <p>
+                  O pacote é mostrado antes e depois do roteador, com troca do
+                  IP privado e da porta efêmera para o IP público do gateway.
+                </p>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <aside class="stack">
+          <article class="panel panel-dark">
+            <div class="panel-header">
+              <div>
+                <h3>Topologias configuradas</h3>
+                <p>Endereçamento já travado para não deixar a IA decidir por conta própria.</p>
+              </div>
+            </div>
+            <div class="info-grid">
+              <div class="info-card">
+                <h4>Missão 1</h4>
+                <p>
+                  LAN `192.168.10.0/24` com PCs A, B e C ligados ao switch.
+                  Tabelas ARP e MAC começam vazias.
+                </p>
+              </div>
+              <div class="info-card">
+                <h4>Missão 2</h4>
+                <p>
+                  LAN `10.0.50.0/24`, gateway `10.0.50.1`, WAN pública
+                  `203.0.113.10` e servidor `198.51.100.20`.
+                </p>
+              </div>
+            </div>
+          </article>
+        </aside>
+      </section>
+
+      <div class="footer-note">
+        Abra direto no navegador via `index.html` ou use um servidor local simples
+        para navegação mais confortável. Todo o projeto funciona sem dependências
+        externas.
+      </div>
+    </div>
+  </body>
+</html>

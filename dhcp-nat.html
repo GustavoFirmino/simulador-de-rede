@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Missão 2 | Simulador de DHCP, Roteamento e NAT</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="./index.html">
+          <span class="brand-mark">◎</span>
+          <span>Simulador de Rede</span>
+        </a>
+        <nav class="nav-links" aria-label="Navegação principal">
+          <a class="nav-link" href="./index.html">Início</a>
+          <a class="nav-link" href="./arp-switching.html">Missão 1</a>
+          <a class="nav-link" href="./docs/relatorio-entrega.html">Relatório</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <span class="eyebrow">Missão 2 • DHCP, roteamento e NAT/PAT</span>
+        <div class="hero-grid">
+          <div>
+            <h1>Da identidade zerada ao acesso externo com tradução de IP e porta.</h1>
+            <p>
+              Os PCs começam com `0.0.0.0`, recebem configuração pela máquina de
+              estados DHCP e depois cruzam o roteador para acessar um servidor
+              público. O pacote é comparado antes e depois do NAT em cada trecho.
+            </p>
+            <div class="hero-actions">
+              <button id="dhcp-start" class="button button-primary" type="button">Obter IP do PC selecionado</button>
+              <button id="web-start" class="button button-secondary" type="button" disabled>
+                Acessar uol.com.br
+              </button>
+              <button id="dhcp-next-step" class="button button-ghost" type="button" disabled>Próximo passo</button>
+              <button id="dhcp-auto-run" class="button button-accent" type="button" disabled>Executar tudo</button>
+            </div>
+          </div>
+          <div class="hero-metrics">
+            <article class="metric">
+              <strong>10.0.50.0/24</strong>
+              <span>faixa privada distribuída pelo roteador via DHCP</span>
+            </article>
+            <article class="metric">
+              <strong>203.0.113.10</strong>
+              <span>IP público da interface WAN do roteador para a internet</span>
+            </article>
+            <article class="metric">
+              <strong>198.51.100.20</strong>
+              <span>servidor externo fictício representando o UOL</span>
+            </article>
+            <article class="metric">
+              <strong>DORA + PAT</strong>
+              <span>discover, offer, request, ack e reescrita de IP/porta na borda</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <main class="main-grid">
+        <section class="stack">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Cenário completo</h2>
+                <p>
+                  Escolha qual PC será o cliente ativo. Os demais continuam na LAN
+                  e ajudam a visualizar broadcast, switch e estado do roteador.
+                </p>
+              </div>
+              <div class="selector" id="client-selector" aria-label="Seleção do computador cliente">
+                <button type="button" data-client="pc-a" class="is-selected">PC A</button>
+                <button type="button" data-client="pc-b">PC B</button>
+                <button type="button" data-client="pc-c">PC C</button>
+              </div>
+            </div>
+
+            <div id="dhcp-stage" class="topology-stage stage-dark">
+              <svg viewBox="0 0 1180 640" preserveAspectRatio="none" aria-hidden="true">
+                <path class="link-line" d="M 170 120 C 300 170, 380 220, 530 270" />
+                <path class="link-line" d="M 170 500 C 300 430, 380 380, 530 330" />
+                <path class="link-line" d="M 350 310 C 420 310, 460 310, 530 310" />
+                <path class="link-line" d="M 710 310 C 780 310, 820 310, 890 310" />
+                <path class="link-line" d="M 980 310 C 1030 310, 1060 310, 1110 310" />
+              </svg>
+
+              <article id="node-lan-a" class="device" style="left: 30px; top: 54px;">
+                <div class="device-icon">🖥</div>
+                <div class="device-title">
+                  <strong>PC A</strong>
+                  <span>Cliente LAN</span>
+                </div>
+                <div id="meta-lan-a" class="device-meta"></div>
+              </article>
+
+              <article id="node-lan-b" class="device" style="left: 30px; top: 260px;">
+                <div class="device-icon">🖥</div>
+                <div class="device-title">
+                  <strong>PC B</strong>
+                  <span>Cliente LAN</span>
+                </div>
+                <div id="meta-lan-b" class="device-meta"></div>
+              </article>
+
+              <article id="node-lan-c" class="device" style="left: 30px; top: 468px;">
+                <div class="device-icon">🖥</div>
+                <div class="device-title">
+                  <strong>PC C</strong>
+                  <span>Cliente LAN</span>
+                </div>
+                <div id="meta-lan-c" class="device-meta"></div>
+              </article>
+
+              <article id="node-lan-switch" class="device" style="left: 470px; top: 240px;">
+                <div class="device-icon">⇄</div>
+                <div class="device-title">
+                  <strong>Switch SW2</strong>
+                  <span>Distribui broadcasts</span>
+                </div>
+                <div class="device-meta">
+                  <div>Portas LAN: Fa0/1 até Fa0/4</div>
+                  <div>Aprende MACs da borda local</div>
+                </div>
+              </article>
+
+              <article id="node-router" class="device" style="left: 810px; top: 240px;">
+                <div class="device-icon">⎈</div>
+                <div class="device-title">
+                  <strong>Roteador R1</strong>
+                  <span>DHCP + Gateway + NAT</span>
+                </div>
+                <div class="device-meta">
+                  <div>LAN: 10.0.50.1/24</div>
+                  <div>WAN: 203.0.113.10</div>
+                  <div>MAC LAN: 00:50:AA:00:00:01</div>
+                </div>
+              </article>
+
+              <article id="node-cloud" class="device" style="left: 980px; top: 140px;">
+                <div class="device-icon">☁</div>
+                <div class="device-title">
+                  <strong>Internet</strong>
+                  <span>Nuvem pública</span>
+                </div>
+                <div class="device-meta">
+                  <div>Trânsito WAN</div>
+                  <div>Encaminha até o servidor remoto</div>
+                </div>
+              </article>
+
+              <article id="node-server" class="device" style="left: 980px; top: 370px;">
+                <div class="device-icon">🌐</div>
+                <div class="device-title">
+                  <strong>uol.com.br</strong>
+                  <span>Servidor externo</span>
+                </div>
+                <div class="device-meta">
+                  <div>IP: 198.51.100.20</div>
+                  <div>Porta web: 443</div>
+                </div>
+              </article>
+
+              <div id="packet-badge-dhcp" class="packet-badge" aria-live="polite"></div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Histórico do fluxo</h3>
+                <p>
+                  O painel registra tanto o DHCP quanto o tráfego web/NAT do
+                  cliente selecionado.
+                </p>
+              </div>
+              <div class="protocol-pill logic" id="dhcp-current-protocol">Aguardando</div>
+            </div>
+            <div class="progress-shell" aria-hidden="true">
+              <div id="dhcp-progress" class="progress-bar"></div>
+            </div>
+            <div id="dhcp-timeline" class="timeline" style="margin-top: 16px;"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Pra pensar</h3>
+                <p>As respostas aparecem naturalmente conforme a simulação avança.</p>
+              </div>
+            </div>
+            <div class="mini-grid">
+              <div class="info-card">
+                <h4>Por que o Request sai em broadcast?</h4>
+                <p>
+                  Porque o cliente ainda está formalizando sua identidade na rede e
+                  precisa deixar claro para todos os servidores DHCP qual oferta aceitou.
+                </p>
+              </div>
+              <div class="info-card">
+                <h4>O que o NAT altera?</h4>
+                <p>
+                  Na ida, o roteador troca o IP privado de origem pelo seu IP
+                  público e também substitui a porta de origem por uma porta PAT.
+                </p>
+              </div>
+              <div class="info-card">
+                <h4>Por que a tabela NAT é obrigatória?</h4>
+                <p>
+                  Sem o mapeamento de porta pública para IP privado, o retorno da
+                  internet não saberia para qual host interno reenviar a resposta.
+                </p>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <aside class="stack">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Estado atual</h3>
+                <p id="dhcp-status-text">
+                  Selecione um PC, obtenha um IP pelo DHCP e depois execute o acesso externo.
+                </p>
+              </div>
+            </div>
+            <div class="control-stack">
+              <div class="control-row">
+                <span id="dhcp-status-pill" class="status-pill">Topologia zerada</span>
+                <span id="dhcp-step-label" class="status-pill warning">0 passos executados</span>
+              </div>
+              <div class="control-row">
+                <button id="reset-dhcp" class="button button-ghost" type="button">Resetar laboratório</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Inspetor de pacotes</h3>
+                <p>Antes e depois do roteador, os campos são reexibidos com a nova tradução.</p>
+              </div>
+            </div>
+            <div id="dhcp-inspector" class="inspector"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Tabela DHCP</h3>
+                <p>Concessões ativas emitidas pelo roteador para os clientes LAN.</p>
+              </div>
+            </div>
+            <div id="table-dhcp-leases" class="table-shell"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Tabela NAT/PAT</h3>
+                <p>Mapeamento entre conexão interna, IP público do roteador e servidor remoto.</p>
+              </div>
+            </div>
+            <div id="table-nat" class="table-shell"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Tabela ARP do cliente selecionado</h3>
+                <p>Mostra quando o gateway é resolvido antes do primeiro acesso web.</p>
+              </div>
+            </div>
+            <div id="table-client-arp" class="table-shell"></div>
+          </article>
+        </aside>
+      </main>
+
+      <div class="footer-note">
+        Dica para demonstração: mostre primeiro o DHCP completo de um host e,
+        sem resetar, repita o fluxo com outro PC para destacar concessões
+        independentes e múltiplas entradas possíveis na tabela NAT.
+      </div>
+    </div>
+
+    <script src="./assets/shared.js" defer></script>
+    <script src="./assets/dhcp.js" defer></script>
+  </body>
+</html>

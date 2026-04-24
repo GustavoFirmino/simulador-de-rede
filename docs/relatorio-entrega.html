@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Relatório da Entrega | Simulador de Rede</title>
+    <link rel="stylesheet" href="../assets/styles.css" />
+    <style>
+      .report-shell {
+        width: min(980px, calc(100vw - 32px));
+      }
+
+      .report-section {
+        margin-top: 20px;
+      }
+
+      .report-section h2 {
+        margin: 0 0 12px;
+        letter-spacing: -0.03em;
+      }
+
+      .report-section p,
+      .report-section li {
+        color: var(--text-soft);
+        line-height: 1.65;
+      }
+
+      .report-grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      }
+
+      .prompt-card {
+        padding: 18px;
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.76);
+        border: 1px solid rgba(17, 33, 48, 0.08);
+        box-shadow: 0 16px 38px rgba(18, 33, 50, 0.08);
+      }
+
+      .prompt-card h3 {
+        margin: 0 0 8px;
+      }
+
+      .prompt-card blockquote {
+        margin: 0;
+        padding-left: 14px;
+        border-left: 3px solid rgba(15, 157, 139, 0.36);
+        color: var(--text-soft);
+      }
+
+      .report-list {
+        margin: 0;
+        padding-left: 20px;
+      }
+
+      .report-hero {
+        margin-top: 8px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shell report-shell">
+      <header class="topbar">
+        <a class="brand" href="../index.html">
+          <span class="brand-mark">◎</span>
+          <span>Simulador de Rede</span>
+        </a>
+        <nav class="nav-links">
+          <a class="nav-link" href="../index.html">Início</a>
+          <a class="nav-link" href="../arp-switching.html">Missão 1</a>
+          <a class="nav-link" href="../dhcp-nat.html">Missão 2</a>
+        </nav>
+      </header>
+
+      <section class="hero report-hero">
+        <span class="eyebrow">Relatório da entrega</span>
+        <div class="hero-grid">
+          <div>
+            <h1>Documentação da solução desenvolvida para o trabalho prático de redes.</h1>
+            <p>
+              Este relatório resume a topologia adotada, os prompts de orientação,
+              o erro conceitual corrigido e os pontos de observação para a
+              apresentação dos simuladores em sala.
+            </p>
+          </div>
+          <div class="hero-metrics">
+            <article class="metric">
+              <strong>IA</strong>
+              <span>OpenAI Codex (família GPT-5)</span>
+            </article>
+            <article class="metric">
+              <strong>Arquivos</strong>
+              <span>2 simuladores HTML + documentação + landing page</span>
+            </article>
+            <article class="metric">
+              <strong>Escopo</strong>
+              <span>ARP, switching, DHCP DORA, roteamento e NAT/PAT</span>
+            </article>
+            <article class="metric">
+              <strong>Foco</strong>
+              <span>Fidelidade conceitual, visual moderno e passo a passo</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel report-section">
+        <div class="panel-header">
+          <div>
+            <h2>Identificação</h2>
+            <p>Resumo rápido do trabalho entregue.</p>
+          </div>
+        </div>
+        <ul class="report-list">
+          <li>Disciplina: Redes de Computadores</li>
+          <li>Trabalho: Desenvolvimento de Simuladores de Rede Assistido por IA</li>
+          <li>IA utilizada: OpenAI Codex (família GPT-5)</li>
+          <li>Repositório: `simulador-de-rede`</li>
+        </ul>
+      </section>
+
+      <section class="panel report-section">
+        <div class="panel-header">
+          <div>
+            <h2>Entregáveis produzidos</h2>
+            <p>Arquivos principais da solução.</p>
+          </div>
+        </div>
+        <div class="report-grid">
+          <div class="info-card">
+            <h4>`index.html`</h4>
+            <p>Landing page com navegação entre as duas missões e o relatório.</p>
+          </div>
+          <div class="info-card">
+            <h4>`arp-switching.html`</h4>
+            <p>Simulador de switching, ARP e ping com cache reaproveitado.</p>
+          </div>
+          <div class="info-card">
+            <h4>`dhcp-nat.html`</h4>
+            <p>Simulador de DHCP DORA, acesso externo e NAT/PAT.</p>
+          </div>
+          <div class="info-card">
+            <h4>`assets/*`</h4>
+            <p>Estilos, utilitários compartilhados e lógica de cada cenário.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel report-section">
+        <div class="panel-header">
+          <div>
+            <h2>Topologias adotadas</h2>
+            <p>Endereçamento travado para evitar decisões automáticas inconsistentes.</p>
+          </div>
+        </div>
+        <div class="report-grid">
+          <div class="info-card">
+            <h4>Missão 1</h4>
+            <p>Rede `192.168.10.0/24` com PCs A, B e C ligados a um switch.</p>
+            <p>PC A `192.168.10.10`, PC B `192.168.10.20`, PC C `192.168.10.30`.</p>
+          </div>
+          <div class="info-card">
+            <h4>Missão 2</h4>
+            <p>LAN `10.0.50.0/24` com roteador `10.0.50.1` servindo DHCP.</p>
+            <p>WAN pública `203.0.113.10` e servidor externo `198.51.100.20`.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel report-section">
+        <div class="panel-header">
+          <div>
+            <h2>Prompts e refinamentos usados</h2>
+            <p>Roteiro textual que guiou a implementação dos cenários.</p>
+          </div>
+        </div>
+        <div class="report-grid">
+          <article class="prompt-card">
+            <h3>Missão 1 • Prompt base</h3>
+            <blockquote>
+              Crie um simulador web em HTML, CSS e JavaScript puro com 3 PCs
+              conectados a um switch. O cenário deve começar com tabela ARP dos
+              PCs e tabela MAC do switch vazias. Ao iniciar um ping do PC A para
+              o PC C, o host de origem deve primeiro validar a máscara, verificar
+              o cache ARP e manter o ping em espera até descobrir o MAC do
+              destino.
+            </blockquote>
+          </article>
+
+          <article class="prompt-card">
+            <h3>Missão 1 • Refinamento</h3>
+            <blockquote>
+              Adicione botão “Próximo passo”, histórico de eventos e inspetor de
+              pacotes estilo Wireshark simplificado. Mostre Ethernet, IP, ARP e
+              ICMP com cores distintas. O segundo ping deve reutilizar o cache.
+            </blockquote>
+          </article>
+
+          <article class="prompt-card">
+            <h3>Missão 2 • Prompt base</h3>
+            <blockquote>
+              Crie um simulador web com 3 PCs ligados a um switch e um roteador
+              que atua como servidor DHCP e gateway. Todos os PCs devem iniciar
+              com IP 0.0.0.0. Ao clicar em “Obter IP”, execute o fluxo Discover,
+              Offer, Request e ACK com IPs, MACs e portas UDP visíveis.
+            </blockquote>
+          </article>
+
+          <article class="prompt-card">
+            <h3>Missão 2 • Refinamento</h3>
+            <blockquote>
+              Depois do DHCP, crie um fluxo “Acessar uol.com.br” mostrando ARP do
+              gateway quando necessário, NAT/PAT na ida, tabela NAT visível e
+              tradução inversa na volta até o cliente correto.
+            </blockquote>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel report-section">
+        <div class="panel-header">
+          <div>
+            <h2>Erro conceitual corrigido</h2>
+            <p>Correção principal exigida pela teoria de redes.</p>
+          </div>
+        </div>
+        <div class="mini-grid">
+          <div class="info-card">
+            <h4>Erro observado</h4>
+            <p>
+              A IA tende a antecipar o `ping` e enviar ICMP como se o host já
+              conhecesse o MAC do destino.
+            </p>
+          </div>
+          <div class="info-card">
+            <h4>Correção aplicada</h4>
+            <p>
+              O `ping` foi modelado como evento pendente. O ICMP só é liberado
+              depois de o ARP Request receber resposta e preencher o cache.
+            </p>
+          </div>
+          <div class="info-card">
+            <h4>Extensão da correção</h4>
+            <p>
+              O mesmo cuidado foi aplicado ao NAT, garantindo tradução na ida e
+              restauração do destino privado apenas pela tabela NAT/PAT.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel report-section">
+        <div class="panel-header">
+          <div>
+            <h2>Pontos para observar na apresentação</h2>
+            <p>Checklist rápido de demonstração em sala.</p>
+          </div>
+        </div>
+        <div class="report-grid">
+          <div class="info-card">
+            <h4>Missão 1</h4>
+            <p>Mostrar o ping aguardando o ARP, o broadcast FF:FF:FF:FF:FF:FF, a aprendizagem da MAC table e o segundo ping sem novo broadcast.</p>
+          </div>
+          <div class="info-card">
+            <h4>Missão 2</h4>
+            <p>Mostrar o DORA completo, a resolução do gateway, o NAT alterando IP e porta na ida e a consulta da tabela NAT na volta.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </body>
+</html>

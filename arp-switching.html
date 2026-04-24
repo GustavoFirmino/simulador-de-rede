@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Missão 1 | Simulador de ARP e Switching</title>
+    <link rel="stylesheet" href="./assets/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="topbar">
+        <a class="brand" href="./index.html">
+          <span class="brand-mark">◎</span>
+          <span>Simulador de Rede</span>
+        </a>
+        <nav class="nav-links" aria-label="Navegação principal">
+          <a class="nav-link" href="./index.html">Início</a>
+          <a class="nav-link" href="./dhcp-nat.html">Missão 2</a>
+          <a class="nav-link" href="./docs/relatorio-entrega.html">Relatório</a>
+        </nav>
+      </header>
+
+      <section class="hero">
+        <span class="eyebrow">Missão 1 • Switching e ARP</span>
+        <div class="hero-grid">
+          <div>
+            <h1>Primeiro ping com ARP completo e switch aprendendo em tempo real.</h1>
+            <p>
+              O cenário começa do zero: nenhuma tabela preenchida, nenhum MAC
+              conhecido. O tráfego só avança quando o PC A descobre o endereço
+              físico do PC C e o switch aprende as portas corretas.
+            </p>
+            <div class="hero-actions">
+              <button id="start-cold" class="button button-primary" type="button">Iniciar ping A → C</button>
+              <button id="start-warm" class="button button-secondary" type="button" disabled>
+                Ping novamente com cache
+              </button>
+              <button id="next-step" class="button button-ghost" type="button" disabled>Próximo passo</button>
+              <button id="auto-run" class="button button-accent" type="button" disabled>Executar tudo</button>
+            </div>
+          </div>
+          <div class="hero-metrics">
+            <article class="metric">
+              <strong>192.168.10.0/24</strong>
+              <span>sub-rede privada fixa para os três hosts do laboratório</span>
+            </article>
+            <article class="metric">
+              <strong>FF:FF:FF:FF:FF:FF</strong>
+              <span>MAC de destino usado no ARP Request em broadcast</span>
+            </article>
+            <article class="metric">
+              <strong>Tabelas vivas</strong>
+              <span>ARP dos PCs e MAC table do switch atualizadas passo a passo</span>
+            </article>
+            <article class="metric">
+              <strong>Wireshark visual</strong>
+              <span>Ethernet, IP, ARP e ICMP com campos destacados na tela</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <main class="main-grid">
+        <section class="stack">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h2>Topologia ativa</h2>
+                <p>
+                  O objetivo é comunicar o PC A com o PC C. O PC B participa do
+                  broadcast, mas deve ignorar a pergunta ARP por não ser o alvo.
+                </p>
+              </div>
+              <div class="tag-row">
+                <span class="chip">PC A: 192.168.10.10</span>
+                <span class="chip">PC B: 192.168.10.20</span>
+                <span class="chip">PC C: 192.168.10.30</span>
+              </div>
+            </div>
+
+            <div id="arp-stage" class="topology-stage">
+              <svg viewBox="0 0 1000 620" preserveAspectRatio="none" aria-hidden="true">
+                <path class="link-line" d="M 200 120 C 320 170, 380 220, 500 270" />
+                <path class="link-line" d="M 200 470 C 320 420, 380 370, 500 320" />
+                <path class="link-line" d="M 800 300 C 700 300, 620 300, 520 300" />
+              </svg>
+
+              <article id="node-pc-a" class="device" style="left: 40px; top: 54px;">
+                <div class="device-icon">🖥</div>
+                <div class="device-title">
+                  <strong>PC A</strong>
+                  <span>Origem</span>
+                </div>
+                <div class="device-meta">
+                  <div>IP: 192.168.10.10/24</div>
+                  <div>MAC: 00:1A:2B:3C:4D:0A</div>
+                  <div>Porta: Fa0/1</div>
+                </div>
+              </article>
+
+              <article id="node-pc-b" class="device" style="left: 40px; top: 410px;">
+                <div class="device-icon">🖥</div>
+                <div class="device-title">
+                  <strong>PC B</strong>
+                  <span>Escuta o broadcast</span>
+                </div>
+                <div class="device-meta">
+                  <div>IP: 192.168.10.20/24</div>
+                  <div>MAC: 00:1A:2B:3C:4D:14</div>
+                  <div>Porta: Fa0/2</div>
+                </div>
+              </article>
+
+              <article id="node-switch" class="device" style="left: 410px; top: 230px;">
+                <div class="device-icon">⇄</div>
+                <div class="device-title">
+                  <strong>Switch SW1</strong>
+                  <span>Tabela MAC inicia vazia</span>
+                </div>
+                <div class="device-meta">
+                  <div>Portas ativas: Fa0/1, Fa0/2, Fa0/3</div>
+                  <div>Aprende origem e decide flood/unicast</div>
+                </div>
+              </article>
+
+              <article id="node-pc-c" class="device" style="left: 770px; top: 230px;">
+                <div class="device-icon">🖥</div>
+                <div class="device-title">
+                  <strong>PC C</strong>
+                  <span>Destino</span>
+                </div>
+                <div class="device-meta">
+                  <div>IP: 192.168.10.30/24</div>
+                  <div>MAC: 00:1A:2B:3C:4D:1E</div>
+                  <div>Porta: Fa0/3</div>
+                </div>
+              </article>
+
+              <div id="packet-badge-arp" class="packet-badge" aria-live="polite"></div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Linha do tempo</h3>
+                <p>Cada clique adiciona um evento novo no histórico do fluxo.</p>
+              </div>
+              <div class="protocol-pill logic" id="current-protocol">Aguardando</div>
+            </div>
+            <div class="progress-shell" aria-hidden="true">
+              <div id="arp-progress" class="progress-bar"></div>
+            </div>
+            <div id="arp-timeline" class="timeline" style="margin-top: 16px;"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Questões que a interface já responde</h3>
+                <p>
+                  Os pontos de observação pedidos no enunciado estão embutidos no
+                  comportamento da simulação.
+                </p>
+              </div>
+            </div>
+            <div class="mini-grid">
+              <div class="info-card">
+                <h4>O que o ARP procura?</h4>
+                <p>
+                  O PC A procura o MAC associado ao IP `192.168.10.30` para
+                  finalmente montar o quadro Ethernet do ping.
+                </p>
+              </div>
+              <div class="info-card">
+                <h4>O que o switch aprende?</h4>
+                <p>
+                  Ele aprende o MAC de origem e a porta de entrada de cada quadro,
+                  e consulta a tabela MAC para decidir entre flood ou unicast.
+                </p>
+              </div>
+              <div class="info-card">
+                <h4>O segundo ping repete o ARP?</h4>
+                <p>
+                  Não. Quando o cache ARP e a tabela MAC já estão preenchidos, o
+                  tráfego segue direto em unicast.
+                </p>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <aside class="stack">
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Controles</h3>
+                <p id="arp-status-text">
+                  Pronto para iniciar o comando `ping` do PC A para o PC C.
+                </p>
+              </div>
+            </div>
+            <div class="control-stack">
+              <div class="control-row">
+                <span id="arp-status-pill" class="status-pill">Estado zerado</span>
+                <span id="arp-step-label" class="status-pill warning">0 passos executados</span>
+              </div>
+              <div class="control-row">
+                <button id="reset-arp" class="button button-ghost" type="button">Resetar topologia</button>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Inspetor de pacotes</h3>
+                <p>Os cabeçalhos exibem exatamente o quadro ou a decisão atual.</p>
+              </div>
+            </div>
+            <div id="arp-inspector" class="inspector"></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Tabelas ARP</h3>
+                <p>Cada host mantém sua própria resolução IP → MAC.</p>
+              </div>
+            </div>
+            <div class="table-stack">
+              <div>
+                <div class="tag-row"><span class="chip">PC A</span></div>
+                <div id="table-arp-a" class="table-shell"></div>
+              </div>
+              <div>
+                <div class="tag-row"><span class="chip">PC B</span></div>
+                <div id="table-arp-b" class="table-shell"></div>
+              </div>
+              <div>
+                <div class="tag-row"><span class="chip">PC C</span></div>
+                <div id="table-arp-c" class="table-shell"></div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel-header">
+              <div>
+                <h3>Tabela MAC do switch</h3>
+                <p>Aprendida dinamicamente a partir dos quadros que entram em cada porta.</p>
+              </div>
+            </div>
+            <div id="table-switch-mac" class="table-shell"></div>
+          </article>
+        </aside>
+      </main>
+
+      <div class="footer-note">
+        Dica para apresentação: rode primeiro o ping inicial para mostrar o ARP
+        completo e depois o botão de “Ping novamente com cache” para evidenciar a
+        diferença entre descoberta e uso do cache.
+      </div>
+    </div>
+
+    <script src="./assets/shared.js" defer></script>
+    <script src="./assets/arp.js" defer></script>
+  </body>
+</html>
