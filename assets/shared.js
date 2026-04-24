@@ -225,7 +225,10 @@
       Number.parseFloat(styles.paddingLeft) + Number.parseFloat(styles.paddingRight);
     const verticalPadding =
       Number.parseFloat(styles.paddingTop) + Number.parseFloat(styles.paddingBottom);
-    const hostWidth = stage.parentElement?.clientWidth || stage.clientWidth;
+    const hostWidth = Math.min(
+      stage.clientWidth || Number.POSITIVE_INFINITY,
+      stage.parentElement?.clientWidth || Number.POSITIVE_INFINITY,
+    );
     const availableWidth = Math.max(hostWidth - horizontalPadding, 240);
     const scale = Math.min(1, availableWidth / baseWidth);
 
