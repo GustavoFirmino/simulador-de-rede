@@ -121,6 +121,7 @@ document.addEventListener("DOMContentLoaded", () => {
       currentStepIndex: 0,
       busy: false,
       queuedStep: false,
+      animationQueue: Promise.resolve(),
       auto: false,
       scenario: null,
       currentSnapshot: null,
@@ -309,6 +310,19 @@ document.addEventListener("DOMContentLoaded", () => {
       : "Próximo passo";
   }
 
+  function queueStepAnimation(step) {
+    if (!step.animate) {
+      return;
+    }
+
+    state.animationQueue = state.animationQueue
+      .catch(() => {})
+      .then(() => step.animate())
+      .catch((error) => {
+        console.error(error);
+      });
+  }
+
   function buildDhcpSteps(clientKey) {
     const client = state.clients[clientKey];
     const offerIp = nextAvailableIp();
@@ -333,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls[clientKey]], "logic");
-          await Sim.wait(420);
+          await Sim.wait(180);
         },
       },
       {
@@ -396,7 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls.router], "dhcp");
-          await Sim.wait(420);
+          await Sim.wait(180);
         },
       },
       {
@@ -565,7 +579,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls[clientKey]], "logic");
-          await Sim.wait(420);
+          await Sim.wait(180);
         },
       },
     ];
@@ -599,7 +613,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls[clientKey], nodeEls.router], "logic");
-          await Sim.wait(420);
+          await Sim.wait(180);
         },
       },
     ];
@@ -721,7 +735,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls[clientKey]], "logic");
-          await Sim.wait(420);
+          await Sim.wait(180);
         },
       });
     }
@@ -886,7 +900,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls.router], "http");
-          await Sim.wait(420);
+          await Sim.wait(180);
         },
       },
       {
@@ -948,7 +962,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls[clientKey], nodeEls.router], "logic");
-          await Sim.wait(420);
+          await Sim.wait(180);
         },
       },
     );
@@ -973,9 +987,7 @@ document.addEventListener("DOMContentLoaded", () => {
       state.currentSnapshot = makeSnapshot(step);
       renderStatus();
 
-      if (step.animate) {
-        await step.animate();
-      }
+      queueStepAnimation(step);
 
       state.history.push(state.currentSnapshot);
       state.currentStepIndex += 1;
@@ -998,7 +1010,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if ((state.auto || state.queuedStep) && state.currentStepIndex < state.steps.length) {
       const shouldContinueAuto = state.auto;
       state.queuedStep = false;
-      await Sim.wait(120);
+      await Sim.wait(30);
       if (shouldContinueAuto) {
         state.auto = true;
       }
@@ -1013,6 +1025,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startScenario(kind) {
     state.auto = false;
+    state.animationQueue = Promise.resolve();
     state.scenario = kind;
     state.currentStepIndex = 0;
     state.steps =
