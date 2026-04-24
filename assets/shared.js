@@ -167,11 +167,11 @@
 
     await wait(24);
 
-    badge.style.transition = "left 0.78s ease, top 0.78s ease, opacity 0.2s ease";
+    badge.style.transition = "left 0.46s ease, top 0.46s ease, opacity 0.2s ease";
     badge.style.left = `${finish.x}px`;
     badge.style.top = `${finish.y}px`;
 
-    await wait(820);
+    await wait(500);
 
     badge.classList.remove("is-visible");
   }
@@ -189,7 +189,7 @@
         .forEach((node) => {
           node.classList.remove("is-active", `is-${tone}`);
         });
-    }, 820);
+    }, 500);
   }
 
   function setText(element, value) {

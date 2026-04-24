@@ -81,6 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       steps: [],
       currentStepIndex: 0,
       busy: false,
+      queuedStep: false,
       auto: false,
       scenario: null,
       currentSnapshot: null,
@@ -187,8 +188,13 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.startCold.disabled = state.busy;
     elements.reset.disabled = state.busy;
     elements.startWarm.disabled = state.busy || !state.coldComplete || hasPending;
-    elements.nextStep.disabled = state.busy || !hasPending;
+    elements.nextStep.disabled = !hasPending;
     elements.autoRun.disabled = state.busy || !hasPending;
+    elements.nextStep.textContent = state.busy
+      ? state.queuedStep
+        ? "Próximo na fila"
+        : "Executando..."
+      : "Próximo passo";
   }
 
   function ethernetSection(sourceMac, destinationMac, note) {
@@ -270,7 +276,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls.a, nodeEls.c], "logic");
-          await Sim.wait(860);
+          await Sim.wait(420);
         },
       },
       {
@@ -288,7 +294,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls.a], "logic");
-          await Sim.wait(860);
+          await Sim.wait(420);
         },
       },
       {
@@ -365,7 +371,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls.b], "arp");
-          await Sim.wait(860);
+          await Sim.wait(420);
         },
       },
       {
@@ -387,7 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls.c], "arp");
-          await Sim.wait(860);
+          await Sim.wait(420);
         },
       },
       {
@@ -458,7 +464,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls.a], "arp");
-          await Sim.wait(860);
+          await Sim.wait(420);
         },
       },
       {
@@ -579,7 +585,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ],
         animate: async () => {
           Sim.pulseNodes([nodeEls.a], "logic");
-          await Sim.wait(860);
+          await Sim.wait(420);
         },
       },
       {
@@ -684,36 +690,56 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     state.busy = true;
+    state.queuedStep = false;
     const step = state.steps[state.currentStepIndex];
 
-    if (step.before) {
-      step.before();
+    try {
+      if (step.before) {
+        step.before();
+      }
+
+      state.currentSnapshot = makeSnapshot(step);
+      renderStatus();
+
+      if (step.animate) {
+        await step.animate();
+      }
+
+      state.history.push(state.currentSnapshot);
+      state.currentStepIndex += 1;
+
+      if (state.currentStepIndex >= state.steps.length && state.scenario === "cold") {
+        state.coldComplete = true;
+      }
+    } catch (error) {
+      console.error(error);
+      state.auto = false;
+      state.queuedStep = false;
+      state.currentSnapshot = {
+        tone: "logic",
+        protocolLabel: "Erro no passo",
+        title: "A simulação encontrou um erro ao executar este passo",
+        summary: error instanceof Error ? error.message : "Erro inesperado na execução.",
+        inspector: [],
+      };
+    } finally {
+      state.busy = false;
+      renderStatus();
     }
 
-    state.currentSnapshot = makeSnapshot(step);
-    renderStatus();
-
-    if (step.animate) {
-      await step.animate();
-    }
-
-    state.history.push(state.currentSnapshot);
-    state.currentStepIndex += 1;
-
-    if (state.currentStepIndex >= state.steps.length && state.scenario === "cold") {
-      state.coldComplete = true;
-    }
-
-    state.busy = false;
-    renderStatus();
-
-    if (state.auto && state.currentStepIndex < state.steps.length) {
-      await Sim.wait(220);
+    if ((state.auto || state.queuedStep) && state.currentStepIndex < state.steps.length) {
+      const shouldContinueAuto = state.auto;
+      state.queuedStep = false;
+      await Sim.wait(120);
+      if (shouldContinueAuto) {
+        state.auto = true;
+      }
       await executeNextStep();
       return;
     }
 
     state.auto = false;
+    state.queuedStep = false;
     renderStatus();
   }
 
@@ -756,6 +782,11 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   elements.nextStep.addEventListener("click", async () => {
+    if (state.busy) {
+      state.queuedStep = true;
+      renderStatus();
+      return;
+    }
     await executeNextStep();
   });
 
